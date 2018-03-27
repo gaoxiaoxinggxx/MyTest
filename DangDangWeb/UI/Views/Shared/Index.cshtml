@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/content/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+    <script src="~/content/layui/layui.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['laypage', 'layer', 'form', 'layedit', 'laydate', 'upload'], function () {
+        var laypage = layui.laypage;
+        var layer = layui.layer;
+        var $ = layui.jquery
+        var form = layui.form
+        , layer = layui.layer
+        , layedit = layui.layedit
+        , laydate = layui.laydate
+        , upload = layui.upload;
+
+        //分页 
+        laypage.render({
+            elem: 'demo2'
+          , count:parseInt(@ViewData["pageCount"])*10
+          , theme: '#1E9FFF'
+            , jump: function (obj, first) {
+                //首次不执行
+                if (!first) {
+                    //alert(obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                    $.ajax({
+                        url: '@Url.Action("EditDeleteTableShow","BookInfo")',
+                        type: 'post',
+                        data: {
+                            pIndex:obj.curr
+                        },
+                        success: function (data) {
+                            $("#TableShow").html(data);
+                        }
+                    })
+                }
+            }
+
+        });
+
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+          , url: '/ashx/BookImageUpLoad.ashx'
+          , before: function (obj) {
+              //预读本地文件示例，不支持ie8
+              obj.preview(function (index, file, result) {
+                  //$('#demo1').attr('src', result); //图片链接（base64）
+              });
+          }
+          , done: function (res) {
+              //如果上传失败
+              if (res.code > 0) {
+                  $('#demo1').attr('src', result); //图片链接（base64）
+                  return layer.msg('上传失败');
+              }
+              //上传成功
+              $('#demo1').attr('src', res.d); //图片链接（base64）
+              $("#imgurl").val(res.d);
+          }
+          , error: function () {
+              //演示失败状态，并实现重传
+              var demoText = $('#demoText');
+              demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+              demoText.find('.demo-reload').on('click', function () {
+                  uploadInst.upload();
+              });
+          }
+        });
+
+
+        //日期
+        laydate.render({
+            elem: '#date1'
+        });
+        laydate.render({
+            elem: '#date2'
+        });
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 1) {
+                    return '至少得输入2个字符以上哦';
+                }
+            }
+          , content: function (value) {
+              layedit.sync(editIndex);
+          }
+        });
+
+        //下拉框的检测监视  和下拉框的渲染
+        function SelectRender(testJC,testXR,urlaction){
+            form.on("select("+testJC+")", function (data) {
+                $.ajax({
+                    url: urlaction,
+                data: {
+                    typeid: data.value
+                },
+                type: "post",
+                success: function (data) {
+                    $("#"+testXR).html(data)
+                    form.render('select', testXR)            //重新渲染  表单中的  select中的信息
+                }
+            })
+             });
+        }
+
+
+
+        //在表单中监听  我们select 选项   如果我们选择了下拉框中的内容就会执行下面的方法了
+        SelectRender("test", "test2", "@Url.Action("AddSelectTwo", "BookInfo")");
+
+    @* form.on('select(test)', function (data) {
+            $.ajax({
+                url: "@Url.Action("AddSelectTwo","BookInfo")",
+                    data: {
+                        typeid: data.value
+                    },
+                    type: "post",
+                    success: function (data) {
+                        $("#test2").html(data)
+                        form.render('select', 'test2')            //重新渲染  表单中的  select中的信息
+                    }
+            })
+        });*@
+
+
+        //这里我们监听下拉框  test2 的下拉框 
+        SelectRender("test2", "test3", "@Url.Action("AddSelectThree","BookInfo")");
+      @*  form.on('select(test2)', function (data) {
+            $.ajax({
+                url: "@Url.Action("AddSelectThree","BookInfo")",
+                    data: {
+                        typeid: data.value
+                    },
+                    type: "post",
+                    success: function (data) {
+                        $("#test3").html(data);
+                        form.render('select', 'test3')
+                    }
+                })
+            })*@
+
+    });
+</script>
+
+</body>
+</html>

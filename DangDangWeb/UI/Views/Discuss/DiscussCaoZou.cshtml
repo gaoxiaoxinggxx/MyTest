@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "DiscussCaoZou";
+    Layout = "~/Views/Shared/_layuiShared.cshtml";
+}
+<blockquote class="layui-elem-quote layui-text">
+    鉴于小伙伴的普遍反馈，先温馨提醒两个常见“问题”：1. <a href="/doc/base/faq.html#form" target="_blank">为什么select/checkbox/radio没显示？</a> 2. <a href="/doc/modules/form.html#render" target="_blank">动态添加的表单元素如何更新？</a>
+</blockquote>
+<form class="layui-form layui-form-pane" action="">
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">书名：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="bookname"  placeholder="书名模糊查询" autocomplete="off" class="layui-input">
+            </div>
+            <label class="layui-form-label">禁用词：</label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="price_min" placeholder="请输入数量" autocomplete="off" class="layui-input">
+            </div>
+            <label class="layui-form-label">警告词：</label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="price_min" placeholder="请输入数量" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">日期：</label>
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="date" id="date" placeholder="日期范围" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid">-</div>
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="date" id="date1" placeholder="日期范围" autocomplete="off" class="layui-input">
+            </div>
+         
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">查询搜索</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          
+        </div>
+    </div>
+    
+</form>
+<div id="DiscussTable">
+    @{Html.RenderAction("DiscussTable", "Discuss");}
+</div>
+<div id="demo2-1" style="text-align: center"></div>
+
+  
+  
+
+@section script
+{
+    <script>
+        layui.use(['laypage', 'layer', 'form', 'layedit', 'laydate'], function () {
+            var laypage = layui.laypage
+             , layer = layui.layer;
+            var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+            laypage.render({
+                elem: 'demo2-1'
+               , count:parseInt( @ViewData["PageCount"])*10
+                , theme: '#FF5722'
+                , jump: function (obj, first) {
+                    if (!first) {
+                        layer.msg('第 ' + obj.curr + ' 页');
+                        $.ajax({
+                            url: '@Url.Action("DiscussTable","Discuss")',
+                            type: 'post',
+                            data: {
+                                pageIndex:obj.curr
+                            },
+                            success: function (data) {
+                                $("#DiscussTable").html(data);
+                                console.log(data);
+                            }
+                        })
+                    }
+                }
+            });
+
+
+            //日期
+            laydate.render({
+                elem: '#date'
+            });
+            laydate.render({
+                elem: '#date1'
+            });
+
+
+            //监听指定开关  
+            form.on('switch(switchTest)', function (data) {
+              
+                $.ajax({
+                    url: '@Url.Action("EdiytDiscuss","Discuss")',
+                    type: 'post',
+                    data: {
+                        id:data.elem.title
+                    },
+                    success: function (data) {
+                        if (data == "1") {
+                            layer.msg("操作成功");
+                        } else if (data == "2") {
+                            layer.msg("操作失败");
+                        } else {
+                            layer.msg("请稍后重试");
+                        }
+
+                       
+                    }
+                })
+               
+
+            });
+
+          
+
+        });
+    </script>
+
+}
+
+
+

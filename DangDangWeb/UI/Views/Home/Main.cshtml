@@ -1,0 +1,126 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>当当网后台</title>
+    <link href="~/content/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript">
+       
+
+      
+    </script>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">当当网后台管理</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="@Url.Action("MainIndex", "Home")" target="iframe">控制台</a></li>
+                <li class="layui-nav-item"><a href="#">商品管理</a></li>
+                <li class="layui-nav-item"><a href="#">用户</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">其它操作</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="#">权限管理</a></dd>
+                        <dd><a href="#">消息管理</a></dd>
+                        <dd><a href="#">授权管理</a></dd>
+                    </dl>
+                </li>
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                        @Html.Raw(ViewData["name"])
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="@Url.Action("UserInfo","Home")" target="iframe">基本资料</a></dd>
+                        <dd><a href="@Url.Action("PassWord","Home")" target="iframe">安全设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="@Url.Action("Index","Home")">退了</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;">入库单信息</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="@Url.Action("List","Inventor")" target="iframe">表单查询</a></dd>
+                            <dd><a href="@Url.Action("Add","Inventor")" target="iframe">增加表单</a></dd>
+                            <dd><a href="@Url.Action("Edit","Inventor")" target="iframe">操作表单</a></dd>
+                            <dd><a href="@Url.Action("AuditingList","Inventor")" target="iframe">审核表单</a></dd>
+                        </dl>
+                    </li>
+                     <li class="layui-nav-item">
+                        <a href="javascript:;">分类信息</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="@Url.Action("Add","BookType")" target="iframe">分类操作</a></dd>
+                            <dd><a href="@Url.Action("FindShow","BookType")" target="iframe">分类查询</a></dd>
+                        </dl>
+                    </li>
+                     <li class="layui-nav-item">
+                        <a href="javascript:;">商品信息</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="@Url.Action("Add","BookInfo")" target="iframe">添加商品</a></dd>
+                            <dd><a href="@Url.Action("EditDeleteBookInfo","BookInfo")" target="iframe">修改删除</a></dd>
+                            <dd><a href="@Url.Action("FindBookInfoShow","BookInfo")" target="iframe">查询操作</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">评论信息</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="@Url.Action("DiscussCaoZou","Discuss")" target="iframe">查询操作</a></dd>
+                            <dd><a href="javascript:;">禁用词添加</a></dd>
+                            <dd><a href="#">删除信息</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="layui-body"   style="overflow-y: hidden">
+            <!-- 内容主体区域 -->
+            @* <div style="padding: 15px;text-align:center">
+              <h4>欢迎进入当当网后台管理系统</h4>
+            </div>*@
+
+            <iframe id="iframe"  style="height:100%;width:100%;" src="@Url.Action("MainIndex", "Home")" name="iframe" ></iframe>
+
+        </div>
+
+
+       
+
+        <div class="layui-footer" style="text-align:center">
+            <!-- 底部固定区域 -->
+            © gaoxiaoxing.com - 版权归星哥所有
+        </div>
+
+
+
+    </div>
+    <script src="~/content/layui/layui.js"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use(['element'], function () {
+            var element = layui.element;
+            var layer = layui.layer;
+
+            
+        });
+    </script>
+</body>
+</html>

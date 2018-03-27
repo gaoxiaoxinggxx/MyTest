@@ -1,0 +1,39 @@
+﻿@model IList<Model.BiaoDanInfo>
+
+
+
+ <div class="layui-form">
+        <table class="layui-table">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>类别</th>
+                    <th>书名</th>
+                    <th>批次</th>
+                    <th>时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                 @foreach (Model.BiaoDanInfo list in Model)
+                {
+                    <tr id="@list.Id">
+                        <td>@list.Id</td>
+                        <td>@list.BookType</td>
+                        <td>@list.BookName</td>
+                        <td>@list.PiCi</td>
+                        <td>@list.DateTime</td>
+                        <td>
+                            <span class="layui-badge">未审核</span>
+                        </td>
+                        <td>
+                            <button class="layui-btn layui-btn-sm" onclick="Edit(this)" title="@list.Id"><i class="layui-icon"></i></button>
+                            <button class="layui-btn layui-btn-sm" onclick="Delete(this)" title="@list.Id"><i class="layui-icon"></i></button>
+                            <button class="layui-btn layui-btn-normal layui-btn-sm" title="@list.Id"><i class="layui-icon"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

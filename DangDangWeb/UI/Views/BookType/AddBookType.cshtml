@@ -1,0 +1,67 @@
+﻿<link href="~/content/layui/css/layui.css" rel="stylesheet" />
+<script src="~/js/jquery-1.7.1.min.js"></script>
+<script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+
+<script type="text/javascript">
+    function Begin() {
+        if ($("#name").val() == "") {
+            layer.open({
+                title: '添加类别'
+                  , content: '请填写类别名称！'
+            });
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    function aftersuccess(data) {
+        if (data == "1") {
+            layer.open({
+                title: '添加类别'
+                   , content: '恭喜您添加成功！'
+            });
+        } else if (data == "2") {
+            layer.open({
+                title: '添加类别'
+                   , content: '添加失败请稍后！'
+            });
+        } else {
+            layer.open({
+                title: '添加类别'
+                   , content: '系统繁忙请稍后重试！'
+            });
+        }
+
+    }
+
+</script>
+
+@using (@Ajax.BeginForm("BookTypeAdd", new { }, new AjaxOptions { HttpMethod = "post", OnBegin = "return Begin()", OnSuccess = "aftersuccess" }, new { @class = "layui-form layui-form-pane" }))
+{
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <div class="layui-form-item">
+        <label class="layui-form-label">类别名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" id="name" value="" autocomplete="off" placeholder="请输入类别名称" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item" style="text-align: center">
+        <button class="layui-btn" lay-submit="" lay-filter="demo2">添加</button>
+    </div>
+}
+
+<script src="~/content/layui/layui.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form
+        , layer = layui.layer
+        , layedit = layui.layedit
+
+    });
+</script>

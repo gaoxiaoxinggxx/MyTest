@@ -1,0 +1,4 @@
+C:\Users\Administrator\Desktop\DangDangWeb\Model\bin\Debug\Model.dll
+C:\Users\Administrator\Desktop\DangDangWeb\Model\bin\Debug\Model.pdb
+C:\Users\Administrator\Desktop\DangDangWeb\Model\obj\Debug\Model.dll
+C:\Users\Administrator\Desktop\DangDangWeb\Model\obj\Debug\Model.pdb

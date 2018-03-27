@@ -1,0 +1,194 @@
+﻿@model IList<Model.BookType>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+    <link href="~/content/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#btnreturn").click(function () {
+                location.href = "/Inventor/Edit";
+            })
+        })
+        function SH(obj) {          //审核 
+            layer.open({
+                type: 2,
+                title: '审核',
+                shade: false,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['600px', '500px'], //宽高
+                content: '/Inventor/SHBiaoDanInfo?id=' + $(obj).attr("title"),
+                cancel: function (index, layero) {          //右上角关闭时触发的回调
+                    layer.close(index);
+                    //location.href = "/Inventor/Edit";
+
+                    var span = $("span[title='" + obj.title + "']");
+
+                    if (span.attr("class") == "layui-badge") {
+                        span.attr("class", "layui-badge layui-bg-blue");
+                        span.text("未审核");
+
+                    } else {
+                        span.attr("class", "layui-badge");
+                        span.text("已审核");
+
+                    }
+                }
+               
+
+            });
+        }
+        function Edit(obj) {              //修改
+            layer.open({
+                type: 2,
+                title: '修改',
+                shade:false, 
+                skin: 'layui-layer-rim', //加上边框
+                area: ['600px', '500px'], //宽高
+                content: '/Inventor/EditBiaoDanInfo?id=' + $(obj).attr("title"),
+                cancel: function (index, layero) {
+                    layer.close(index);
+                    location.href = "/Inventor/Edit";
+                }
+            });
+          
+        }
+        function Delete(obj) {         //删除
+            layer.confirm('您确定要删除吗？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: "/Inventor/DeleteBiaoDanInfo",
+                    type: "post",
+                    data: {
+                        id:$(obj).attr("title")
+                    },
+                    success: function (data) {
+                        if (data == "1") {
+                            // location.href = "/Inventor/Edit"
+                            $("#" + $(obj).attr("title")).remove();
+                        }
+                    }
+                })
+                layer.msg('删除成功', { icon: 1 });
+            }, function () {
+                layer.msg('取消成功', {
+                    time: 20000, //20s后自动关闭
+                    btn: ['明白了', '知道了']
+                });
+                return false;
+            });
+        }
+        function Begin() {
+            if ($("#select").val() == "0" && $("#number").val() == "" && $('input:radio[name="ispass"]:checked').val()==null) {
+                layer.open({
+                    title: '搜索'
+                   , content: '请填写搜索条件！'
+                });
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function aftersuccess(data) {
+            $("#div").html(data);
+            $("#demo2-1").hide();
+            $("#btnBace").css("display", "block")
+        }
+    </script>
+</head>
+<body>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>操作表单</legend>
+    </fieldset>
+
+    @using (Ajax.BeginForm("EditTable", new { }, new AjaxOptions { HttpMethod = "post", OnSuccess = "aftersuccess", OnBegin="Begin" }, new { @class = "layui-form" }))
+    { 
+        <div class="layui-form-item">
+            <label class="layui-form-label">类别搜索</label>
+            <div class="layui-input-inline">
+                <select name="quiz1" id="select">
+                    <option value="0" selected="selected">选择类别</option>
+                    @foreach (var list in Model)
+                    {
+                        <option value="@list.TypeTitle" >@list.TypeTitle</option>
+                    }
+                </select>
+            </div>
+           
+                <label class="layui-form-label">批次搜索</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="number" id="number" autocomplete="off" class="layui-input">
+                </div>
+
+             <label class="layui-form-label">审核</label>
+   
+           <input type="radio" name="ispass"  value="1" title="是">
+           <input type="radio" name="ispass"  value="2" title="否">
+     
+
+      <button class="layui-btn" lay-submit="" lay-filter="demo2">开始搜索</button>
+   
+          
+        </div> 
+    }
+
+    <div id="div">
+       @{Html.RenderAction("EditTable", "Inventor");}
+    </div>
+
+
+
+
+    <div id="demo2-1"></div>
+
+     <fieldset class="layui-elem-field site-demo-button" id="btnBace" style="margin-top: 30px;display:none">
+        <button class="layui-btn" id="btnreturn">返回列表页</button>
+    </fieldset>
+
+
+
+    <script src="~/content/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'laypage', 'layer'], function () {
+            var form = layui.form
+            var laypage = layui.laypage
+            , layer = layui.layer;
+
+           
+            laypage.render({
+                elem: 'demo2-1'
+              , count: parseInt(@ViewData["PageCount"])*10
+              , theme: '#FF5722'
+              , jump: function (obj, first) {
+                  //首次不执行
+                  if (!first) {
+                      $.ajax({
+                          url: "/Inventor/EditTable",
+                          type: "post",
+                          data: {
+                              pIndex: obj.curr
+                          },
+                          success: function (data) {
+                              $("#div").html(data);      //返回的是一个页面的
+                          }
+                      })
+                  }
+                }
+            });
+
+          
+
+        });
+</script>
+</body>
+</html>

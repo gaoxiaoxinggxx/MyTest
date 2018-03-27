@@ -1,0 +1,25 @@
+﻿@model IList<Model.BookType>
+
+<div class="layui-form">
+  <table class="layui-table">
+    <thead>
+      <tr>
+        <th>编号</th>
+        <th>书名</th>
+        <th>父级编号</th>
+      
+      </tr> 
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+         <tr>
+        <td>@item.TypeId</td>
+        <td>@item.TypeTitle</td>
+        <td>@item.TypeParentId </td>
+      </tr>
+        }
+    
+    </tbody>
+  </table>
+</div>

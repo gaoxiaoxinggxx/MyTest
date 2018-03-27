@@ -1,0 +1,164 @@
+﻿<link href="~/content/layui/css/layui.css" rel="stylesheet" />
+<script src="~/js/jquery-1.7.1.min.js"></script>
+<script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+<script type="text/ecmascript">
+   
+
+    $(function () {
+        $("#div1").show();
+        $("#div2").hide();
+    })
+
+   
+
+    function Type() {
+        var number = $("#number").val();
+        if (number == "1") {            //添加子项
+            $("#div1").hide();
+            $("#div2").show();
+            $("#span").text("1：添加子项")
+            $("#caozuoid").val("1")
+          
+        } else if (number == "2") {              //删除子项
+            $.ajax({
+                url: '@Url.Action("DeleteBookType","BookType")',
+                data: {
+                    id: $("#TypeId").val()
+                },
+                type:'post',
+                success: function (data) {
+                    if (data == "0") {
+                        alert("对不起该项下面有子选项不能删除!")
+                    } else if (data == "1") {
+                        alert("删除成功");
+                    } else if (data == "2") {
+                        alert("删除失败");
+                    } else {
+                        alert("系统方面请稍后重试")
+                    }
+                }
+            })
+        } else if (number == "3") {              //修改子项
+            $("#div1").hide();
+            $("#div2").show();
+            $("#span").text("3：修改")
+            $("#caozuoid").val("3")
+        } else {
+            alert("请输入正确编号");
+           
+            //$("#number").val("");
+        }
+      
+    }
+
+    function Back() {          //返回 操作的弹窗页面
+        $("#div1").show();
+        $("#div2").hide();
+    }
+
+    function TJ() {
+        $.ajax({
+            url: '@Url.Action("BookTypeCaoZuo","BookType")',
+            data: {
+                name: $("#name").val(),
+                id: $("#TypeId").val(),
+                type:$("#caozuoid").val()
+            },
+            type: 'post',
+            success: function (data) {
+                if (data == "1") {
+                   alert("添加成功")
+                } else if (data == "2") {
+                    alert("添加失败")
+                } else if (data == "11") {
+                    alert("修改成功");
+                } else if (data == "22") {
+                    alert("修改失败");
+                } else {
+                    alert("系统繁忙请稍后重试")
+                }
+
+            }
+        })
+
+    }
+
+
+
+
+
+</script>
+
+
+<form class="layui-form layui-form-pane"  id="form1">
+
+
+    <div id="div1">
+    <input type="hidden" value="@ViewData["id"]" name="id" id="TypeId"/>
+        <input type="hidden" value="" id="caozuoid"/>
+    <div style="text-align: center">
+        <span>1：添加子类--2：删除子类--3：修改子类</span>
+    </div>
+    <br />
+    <br />
+
+
+    <div class="layui-form-item" style="text-align: center">
+        <label class="layui-form-label" id="label">请输入编号</label>
+        <div class="layui-input-inline" id="div-input">
+            <input type="text" name="number" id="number" value="" lay-verify="required" placeholder="请输入编号" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="layui-form-item" style="text-align: center">
+         <button type="reset" class="layui-btn layui-btn-primary" style="background-color:#009688" onclick="Type()">提交</button>
+    </div>
+
+  </div>
+
+
+
+
+    
+    <div id="div2">
+    <div style="text-align: center">
+        <span id="span">1：添加子类</span>
+    </div>
+    <br />
+    <br />
+
+
+    <div class="layui-form-item" style="text-align: center">
+        <label class="layui-form-label">输入名称</label>
+        <div class="layui-input-inline">
+            <input type="text" name="name" id="name" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="layui-form-item" style="text-align: center">
+        <button class="layui-btn" lay-submit="" lay-filter="demo2" onclick="TJ()">提交</button>
+        <button type="reset" class="layui-btn layui-btn-primary" onclick="Back()">返回</button>
+    </div>
+
+        </div>
+</form>
+
+
+
+
+<script src="~/content/layui/layui.js"></script>
+<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+<script>
+    //layui.use(['form', 'layedit', 'laydate'], function () {
+    //    var form = layui.form
+    //    , layer = layui.layer
+    //    , layedit = layui.layedit
+
+
+        
+
+    // });
+   
+</script>

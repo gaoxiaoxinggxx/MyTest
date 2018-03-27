@@ -1,0 +1,113 @@
+﻿@model IList<Model.BookType>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>List</title>
+    <link href="~/content/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#btnreturn").click(function () {
+                location.href = "/Inventor/List";
+            })
+        })
+
+        function aftersuccess(data) {
+            // $("#myDIV").html(data);      //返回的是一个页面的
+            if (data == "1") {
+                layer.open({
+                    title: '搜索'
+                 , content: '请您选择类别！'
+                });
+            } else {
+                $("#myDIV").html(data);
+                $("#demo2-1").hide();
+                $("#btnBace").css("display","block")
+            }
+        }
+    </script>
+
+</head>
+<body>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>入库表单</legend>
+    </fieldset>
+
+
+
+
+
+    @using (Ajax.BeginForm("Index", new { }, new AjaxOptions { HttpMethod = "post", OnSuccess = "aftersuccess" }, new { @class = "layui-form" }))
+    {
+        <div class="layui-form-item">
+            <label class="layui-form-label">类别搜索</label>
+            <div class="layui-input-inline">
+                <select name="quiz1" id="select">
+                    <option value="0" selected="selected">选择类别</option>
+                    @foreach (var list in Model)
+                    {
+                        <option value="@list.TypeTitle" >@list.TypeTitle</option>
+                }
+                </select>
+            </div>
+            <button class="layui-btn" lay-submit="" lay-filter="demo2" >开始搜索</button>
+        </div> 
+        }
+    
+
+
+
+     
+    <div id="myDIV">
+           @{Html.RenderAction("Index", "Inventor");}
+    </div>
+
+
+    <fieldset class="layui-elem-field site-demo-button" id="btnBace" style="margin-top: 30px;display:none">
+        <button class="layui-btn" id="btnreturn">返回列表页</button>
+    </fieldset>
+
+    <div id="demo2-1"></div>
+     <script src="~/content/layui/layui.js"></script>
+    <script>
+      
+        layui.use(['form', 'laypage', 'layer'], function () {
+            var form=layui.form
+            var laypage = layui.laypage
+            , layer = layui.layer;
+
+            //自定义样式
+
+            laypage.render({
+                elem: 'demo2-1'
+              , count: parseInt(@ViewData["PageCount"]) * 10
+              , theme: '#FF5722'
+              , jump: function (obj, first) {
+                  //首次不执行
+                  if (!first) {
+                      $.ajax({
+                          url: "/Inventor/Index",
+                          type: "post",
+                          data: {
+                              pIndex: obj.curr
+                          },
+                          success: function (data) {
+                              $("#myDIV").html(data);      //返回的是一个页面的
+                          }
+                      })
+                  }
+              }
+            });
+
+
+        });
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+﻿  @model IList<Model.BookInfo>
+
+
+  <div class="layui-form">
+  <table class="layui-table">
+   
+    <thead>
+      <tr>
+        <th>书名</th>
+        <th>作者</th>
+        <th>原价</th>
+        <th>现价</th>
+        <th>出版社</th>
+        <th>ISBN</th>
+        <th>操作</th>
+      </tr> 
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+         <tr id="@item.Bid">
+        <td>@item.Title</td>
+        <td>@item.Author</td>
+        <td>@item.PriceOld</td>
+        <td>@item.PriceNew </td>
+        <td>@item.Publisher</td>
+        <td>@item.ISBN</td>
+        <td>
+            <button class="layui-btn layui-btn-normal layui-btn-sm"><a href="/BookInfo/EdityBookInfoShow?id=@item.Bid"><i class="layui-icon" ></i></a></button>
+           
+            <button class="layui-btn layui-btn-normal layui-btn-sm" onclick="Delete(this)" title="@item.Bid"><a href="#"><i class="layui-icon" ></i></a></button>
+            <button class="layui-btn layui-btn-normal layui-btn-sm" ><a href="/BookInfo/DetailsShow?id=@item.Bid"><i class="layui-icon" ></i></a></button>
+
+        </td>
+        </tr>
+        }
+      
+    </tbody>
+  </table>
+</div>
+<script type="text/javascript">
+
+    function Delete(sum) {
+        layer.confirm('您确定要删除吗？', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+            $.ajax({
+                url: '@Url.Action("DeleteBookInfo","BookInfo")',
+                  type: 'post',
+                  data: {
+                      id: sum.title
+                  },
+                  success: function (data) {
+                      if (data == "1") {
+                          layer.alert('恭喜您删除成功', { icon: 6 });
+                          $("#" + sum.title).remove();
+                      } else if (data == "2") {
+                          layer.alert('抱歉删除失败');
+                      } else {
+                          layer.alert('系统繁忙,请稍后重试');
+                      }
+                  }
+              })
+        }, function () {
+            layer.msg('取消成功', {
+                time: 1000, //1s后自动关闭
+              
+            });
+        });
+    }
+   
+</script>

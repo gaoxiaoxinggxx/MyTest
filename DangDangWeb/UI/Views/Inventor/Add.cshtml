@@ -1,0 +1,163 @@
+﻿@model IList<Model.BookType>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add</title>
+    <link href="~/content/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        function aftersuccess(date) {
+            if (date == "1") {
+                layer.open({
+                    title: '添加入库信息'
+                  , content: '恭喜您添加成功！'
+                });
+            } else if (date == "2") {
+                layer.open({
+                    title: '添加入库信息'
+                 , content: '添加失败，请重试！'
+                });
+            } else {
+                layer.open({
+                    title: '添加入库信息'
+               , content: '系统繁忙，请稍后重试！'
+                });
+            }
+        }
+    </script>
+</head>
+<body>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>添加表单信息</legend>
+    </fieldset>
+
+    
+   
+        @using (Ajax.BeginForm("AddInfo", new { }, new AjaxOptions { HttpMethod = "post", OnSuccess = "aftersuccess" }, new { @class = "layui-form" }))
+        {
+             
+        <div class="layui-form-item">
+         <div class="layui-inline">
+                <label class="layui-form-label">请选择类别</label>
+                <div class="layui-input-inline">
+                    <select name="modules" lay-verify="required" lay-search="">
+                        <option value="">请选择类别</option>
+                        @foreach (Model.BookType list in Model)
+                        {
+                            <option value="@list.TypeTitle">@list.TypeTitle</option>
+                        }
+                    </select>
+                </div>
+            </div>
+           </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">书名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" lay-verify="title" autocomplete="off" placeholder="请输入书名用逗号分开" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">数量</label>
+            <div class="layui-input-inline">
+                <input type="text" name="count" lay-verify="required" placeholder="请输入总数量" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+         <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">价格</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="price_min" placeholder="￥" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+         <div class="layui-form-item">
+            <label class="layui-form-label">出版社</label>
+            <div class="layui-input-block">
+                <input type="text" name="publisher" lay-verify="title" autocomplete="off" placeholder="请输入出版社名称" class="layui-input">
+            </div>
+        </div>
+
+           <div class="layui-form-item">
+            <label class="layui-form-label">批次</label>
+            <div class="layui-input-inline">
+                <input type="text" name="pc" lay-verify="required" placeholder="请输入批次" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">日期选择</label>
+                <div class="layui-input-block">
+                    <input type="text" name="date" id="date1" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item layui-form-text">
+    <label class="layui-form-label">编辑器</label>
+    <div class="layui-input-block">
+      <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor"></textarea>
+    </div>
+  </div>-->
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+        }
+
+
+
+
+    <script src="~/content/layui/layui.js"></script>
+       <script>
+           layui.use(['form', 'layedit', 'laydate'], function () {
+               var form = layui.form
+               , layer = layui.layer
+               , layedit = layui.layedit
+               , laydate = layui.laydate;
+
+               //日期
+               laydate.render({
+                   elem: '#date1'
+               });
+
+               //创建一个编辑器
+               //var editIndex = layedit.build('LAY_demo_editor');
+
+               //自定义验证规则
+               form.verify({
+                   title: function (value) {
+                       if (value.length < 1) {
+                           return '请输入书名';
+                       }
+                   }
+                 , content: function (value) {
+                     layedit.sync(editIndex);
+                 }
+               });
+               //监听提交
+               //form.on('submit(demo1)', function (data) {
+               //    layer.alert(JSON.stringify(data.field), {
+               //        title: '最终的提交信息'
+               //    })
+               //    return true;
+               //});
+            
+
+           });
+</script>
+</body>
+</html>

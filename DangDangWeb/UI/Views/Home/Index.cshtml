@@ -1,0 +1,142 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="renderer" content="webkit">
+    <title>当当网-后台管理页面</title>
+    <link href="~/css/Logincss/pintuer.css" rel="stylesheet" />
+    <link href="~/css/Logincss/admin.css" rel="stylesheet" />
+    <link href="~/content/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/js/Loginjs/jquery.js"></script>
+    <script src="~/js/Loginjs/pintuer.js"></script>
+    <script src="~/js/Loginjs/respond.js"></script>
+    <script src="~/js/Loginjs/admin.js"></script>
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <link type="image/x-icon" href="http://www.pintuer.com/favicon.ico" rel="shortcut icon" />
+    <link href="http://www.pintuer.com/favicon.ico" rel="bookmark icon" />
+    <script type="text/javascript">
+        $(function () {
+            $("#Vcode").click(function () {
+                VCode();
+            })
+        })
+
+        function afterSuccess(data) {
+            if (data == "1") {
+                alert("验证吗不正确，请重新输入");
+                VCode();
+               // window.location.href = "/Home/Index";
+            } else if(data=="2"){
+                alert("用户名密码不正确请");
+                VCode();
+               // window.location.href = "/Home/Index";
+            } else if (data == "3") {
+                window.location.href = "/Home/Main";
+            } else if (data == "4") {
+                alert("您非管理员身份请切换身份");
+                VCode();
+            } else {
+                alert("系统繁忙请稍后重试");
+                VCode();
+            }
+        }
+
+        function VCode() {
+            var src = $("#Vcode").attr('src') + "?" + 1;
+            $("#Vcode").attr("src", src);
+        }
+    </script>
+
+</head>
+
+    
+<body>
+<div class="container">
+    <div class="line">
+        <div class="xs6 xm4 xs3-move xm4-move">
+            <br /><br />
+            <div class="media media-y">
+                <a href="#" target="_blank"><img src="images/logo.jpg" class="radius" alt="后台管理系统" /></a>
+            </div>
+            <br /><br />
+            @using (Ajax.BeginForm("Login", new { }, new AjaxOptions { HttpMethod = "post", OnSuccess = "afterSuccess" }, new { @class = "layui-form" }))
+            {
+            <div class="panel">
+                <div class="panel-head" style="text-align:center"><strong>登录当当网后台管理页面</strong></div>
+                <div class="panel-body" style="padding:30px;">
+                    <div class="form-group">
+                        <div class="field field-icon-right">
+                            <input type="text" class="input" name="name" placeholder="登录账号" data-validate="required:请填写账号,length#>=5:账号长度不符合要求" />
+                            <span class="icon icon-user"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="field field-icon-right">
+                            <input type="password" class="input" name="password" placeholder="登录密码" data-validate="required:请填写密码,length#>=8:密码长度不符合要求" />
+                            <span class="icon icon-key"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="field">
+                            <input type="text" class="input" name="passcode" placeholder="填写右侧的验证码" data-validate="required:请填写右侧的验证码" />
+                            <img src="~/ashx/Code.ashx" id="Vcode" width="80" height="32" class="passcode" style="border-color:#DDDDDD"/>
+                        </div>
+                    </div>
+
+                    <div >
+                        <label class="layui-form-label">管理员</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="isadmin" value="是" title="是" >
+                            <input type="radio" name="isadmin" value="否" title="否" checked="">
+                            <input type="radio" name="isadmin" value="禁" title="禁用" disabled="">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="panel-foot text-center"><button class="button button-block bg-main text-big" id="btn">登录后台</button></div>
+            </div>
+          
+            }
+            <div class="text-right text-small text-gray padding-top"><a class="text-gray" target="_blank" href="/Home/zhuce">注册新用户</a></div>
+        </div>
+    </div>
+</div>
+
+<div class="hidden"><script src="http://s4.cnzz.com/stat.php?id=5952475&web_id=5952475" language="JavaScript"></script></div>
+    <script src="~/content/layui/layui.js"></script>
+</body>
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+
+            //监听指定开关
+            form.on('switch(switchTest)', function (data) {
+                layer.msg('开关checked：' + (this.checked ? 'true' : 'false'), {
+                    offset: '6px'
+                });
+                layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+            });
+
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                layer.alert(JSON.stringify(data.field), {
+                    title: '最终的提交信息'
+                })
+                return false;
+            });
+        });
+</script>
+</html>

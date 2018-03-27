@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "删除修改操作";
+    Layout = "~/Views/Shared/Index.cshtml";
+}
+
+<blockquote class="layui-elem-quote">
+ <fieldset class="layui-elem-field layui-field-title" style="margin-top: 10px;">
+  <legend>删除修改图书信息</legend>
+</fieldset>
+
+</blockquote>   
+            
+<div id="TableShow">
+     @{Html.RenderAction("EditDeleteTableShow", "BookInfo");}
+</div> 
+
+
+<div id="demo2"></div>
+
+
+  

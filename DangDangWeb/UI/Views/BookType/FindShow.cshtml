@@ -1,0 +1,164 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>分类查询</title>
+    <link href="~/content/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#returnback").click(function () {
+                var str = "";
+                SjldLookUp(str);
+            })
+
+            $("#btn").click(function () {
+                var quiz1 = $("#quiz1").val();
+                var two = $("#mySelect1").val();
+                var three = $("#mySelect3").val();
+
+                if (quiz1 =="" && two =="" && three =="") {
+                    alert("请选择选择类别！")
+                    return false;
+                }
+                else {
+                    var str = quiz1 + ',' + two + ',' + three;
+                    SjldLookUp(str);
+                    return true;
+                }
+               
+            })
+         
+        })
+
+        function SjldLookUp(str) {
+            $.ajax({
+                url: '@Url.Action("SjldLookUp","BookType")',
+              type: 'post',
+              data: {
+                  data: str
+              },
+              success: function (data) {
+                  $("#lookupshow").html(data);
+              }
+          })
+        }
+
+
+
+    </script>
+</head>
+<body>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+        <legend>分类查询</legend>
+    </fieldset>
+    <form class="layui-form layui-form-pane" action="">
+     
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择类别</label>
+            <div class="layui-input-inline">
+                 @Html.DropDownList("quiz1", ViewData["One"] as SelectList, "请选择一级分类", new { @lay_filter="test"})
+            </div>
+            <div class="layui-input-inline">
+                <div class="layui-form" lay-filter="test2" id="test2">
+                  @{Html.RenderAction("TwoBookType","BookType");}
+                  </div>
+            </div>
+            <div class="layui-input-inline">
+                <div class="layui-form" lay-filter="test3" id="test3">
+                    @{Html.RenderAction("ThreeBookType", "BookType");}      
+                </div>
+
+            </div>
+               <button type="reset" class="layui-btn layui-btn-primary" id="btn">查询</button>
+               <button type="reset" class="layui-btn layui-btn-primary" id="returnback">返回</button>
+          </div>
+    </form>
+
+         <div id="lookupshow">
+             @{Html.RenderAction("SjldLookUp", "BookType");}
+         </div>
+    <div id="demo2"></div>
+
+    <script src="~/content/layui/layui.js"></script>
+    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+    <script>
+        layui.use(['laypage', 'layer', 'form', 'layedit', 'laydate'], function () {
+            var laypage = layui.laypage;
+            var layer = layui.layer;
+            var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+            //自定义样式
+            laypage.render({
+                elem: 'demo2'
+              , count: parseInt(@ViewData["PageCount"])*10
+              , theme: '#1E9FFF'
+                , jump: function (obj, first) {
+                   // alert(obj.limit);  //得到每页显示的条数  这里每页默认的是10天信息
+                    //首次不执行
+                    if (!first) {
+                       // alert(obj.curr);   //得到当前页，以便向服务器请求对应页的数据
+                        $.ajax({
+                            url: '@Url.Action("SjldLookUp","BookType")',
+                            type: 'post',
+                            data: {
+                                pIndex:obj.curr
+                            },
+                            success: function (data) {
+                                $("#lookupshow").html(data);
+                            }
+
+                        })
+                    }
+                }
+            });
+
+
+
+            form.on('select(test)', function (data) {
+              
+                $.ajax({
+                    url: "@Url.Action("TwoBookType","BookType")",
+                    data: {
+                        typeid:data.value
+                    },
+                    type: "post",
+                    success: function (data) {
+                       $("#test2").html(data)
+                       form.render('select','test2')            //重新渲染  表单中的  select中的信息
+                        
+                    }
+                })
+
+            });
+
+            form.on('select(test2)', function (data) {
+                $.ajax({
+                    url: "@Url.Action("ThreeBookType","BookType")",
+                    data: {
+                        typeid:data.value
+                    },
+                    type: "post",
+                    success: function (data) {
+                        $("#test3").html(data);
+                        form.render('select','test3')
+                    }
+                })
+            })
+
+        });
+    </script>
+
+
+
+</body>
+</html>

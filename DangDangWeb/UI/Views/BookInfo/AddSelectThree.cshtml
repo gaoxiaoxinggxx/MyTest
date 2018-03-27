@@ -1,0 +1,3 @@
+﻿   
+     @*下拉框  第一个是name属性   第二个是后台给下拉框传的值   第三个是第一个默认选项  第四个是  我们给她的id属性值和自定义额标签属性 *@
+   @Html.DropDownList("three", ViewData["three"] as SelectList, "请选择三级分类", new { @id="mySelect3",@lay_filter="test3"})

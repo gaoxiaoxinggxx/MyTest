@@ -1,0 +1,157 @@
+﻿@model IList<Model.BookType>
+
+<link href="~/content/layui/css/layui.css" rel="stylesheet" />
+<script src="~/js/jquery-1.7.1.min.js"></script>
+<script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+        <script type="text/javascript">
+            function aftersuccess(data) {
+                if (data == "1") {
+                    layer.open({
+                        title: '修改'
+                   , content: '恭喜您修改成功！'
+                    });
+                  
+                } else if (data == "2") {
+                    layer.open({
+                        title: '修改'
+                   , content: '很遗憾修改该失败！'
+                    });
+                } else {
+                    layer.open({
+                        title: '系统错误'
+                   , content: '抱歉，系统繁忙！'
+                    });
+                }
+            }
+       </script>
+  @using (Ajax.BeginForm("BiaoDanInfoSH", new { }, new AjaxOptions { HttpMethod = "post", OnSuccess = "aftersuccess" }, new { @class = "layui-form" }))
+        {
+             <input type="hidden" value="@ViewData["id"]" name="id"/>
+      <input type="hidden" value="@ViewData["foalt"]" name="foalt"/>
+        <div class="layui-form-item">
+         <div class="layui-inline">
+                <label class="layui-form-label">请选择类别</label>
+                <div class="layui-input-inline">
+                    <select name="modules" lay-verify="required" lay-search="" aria-readonly="true">
+                        <option value="@ViewData["booktype"]" selected="selected" >@ViewData["booktype"]</option>
+                        @foreach (Model.BookType list in Model)
+                        {
+                            <option value="@list.TypeTitle">@list.TypeTitle</option>
+                        }
+                    </select>
+                </div>
+            </div>
+           </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">书名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" lay-verify="title" readonly="true" value="@ViewData["bookname"]" autocomplete="off" placeholder="请输入书名用逗号分开" class="layui-input" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">数量</label>
+            <div class="layui-input-inline">
+                <input type="text" name="count" lay-verify="required" readonly="true" value="@ViewData["count"]" placeholder="请输入总数量" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+         <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">价格</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="price_min" placeholder="￥" readonly="true" value="@ViewData["price"]" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+         <div class="layui-form-item">
+            <label class="layui-form-label">出版社</label>
+            <div class="layui-input-block">
+                <input type="text" name="publisher" lay-verify="title" readonly="true" value="@ViewData["publisher"]" autocomplete="off" placeholder="请输入出版社名称" class="layui-input">
+            </div>
+        </div>
+
+           <div class="layui-form-item">
+            <label class="layui-form-label">批次</label>
+            <div class="layui-input-inline">
+                <input type="text" name="pc" lay-verify="required" readonly="true" value="@ViewData["pici"]" placeholder="请输入批次" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">日期选择</label>
+                <div class="layui-input-block">
+                    <input type="text" name="date" id="date1" readonly="true" value="@ViewData["datetime"]" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item layui-form-text">
+    <label class="layui-form-label">编辑器</label>
+    <div class="layui-input-block">
+      <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="LAY_demo_editor"></textarea>
+    </div>
+  </div>-->
+      
+      if (Convert.ToInt32(@ViewData["foalt"]) == 1)
+      { 
+            <div class="layui-form-item">
+              <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit="" lay-filter="demo1">取消通过</button>
+              </div>
+          </div>
+         
+      }
+      else
+      {
+         <div class="layui-form-item">
+              <div class="layui-input-block">
+                  <button class="layui-btn" lay-submit="" lay-filter="demo1">审核通过</button>
+              </div>
+          </div>
+      }
+          
+        
+        }
+  
+   <script src="~/content/layui/layui.js"></script>
+ <script>
+           layui.use(['form', 'layedit', 'laydate'], function () {
+               var form = layui.form
+               , layer = layui.layer
+               , layedit = layui.layedit
+               , laydate = layui.laydate;
+
+               //日期
+               laydate.render({
+                   elem: '#date1'
+               });
+
+               //创建一个编辑器
+               //var editIndex = layedit.build('LAY_demo_editor');
+
+               //自定义验证规则
+               form.verify({
+                   title: function (value) {
+                       if (value.length < 1) {
+                           return '请输入书名';
+                       }
+                   }
+                 , content: function (value) {
+                     layedit.sync(editIndex);
+                 }
+               });
+               //监听提交
+               //form.on('submit(demo1)', function (data) {
+               //    layer.alert(JSON.stringify(data.field), {
+               //        title: '最终的提交信息'
+               //    })
+               //    return true;
+               //});
+            
+
+           });
+</script>

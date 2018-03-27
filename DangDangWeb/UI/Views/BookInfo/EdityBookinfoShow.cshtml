@@ -1,0 +1,276 @@
+﻿@model Model.BookInfo
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>修改商品信息</title>
+    <link href="~/content/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        function Back() {
+            window.location.href = "@Url.Action("EditDeleteBookInfo","BookInfo")";
+        }
+        function AjaxBegin() {
+          
+        }
+        function afterSuccess(data) {
+            if (data == "1") {
+                layer.alert('修改成功', {
+                    icon: 1,
+                    skin: 'layer-ext-moon'
+                })
+            } else if (data == "2") {
+                alert("修改失败，请稍后重试");
+            } else {
+                alert("系统繁忙，请稍后重试")
+            }
+        }
+    </script>
+</head>
+<body>
+    <blockquote class="layui-elem-quote layui-text">
+        添加商品信息，先温馨提醒两个常见“问题”：1. <a href="#" target="_blank">类别请明确选择？</a> 2. <a href="#" target="_blank">图片可以自动调节大小的？</a>
+    </blockquote>
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>修改商品详细信息</legend>
+    </fieldset>
+
+    @using (Ajax.BeginForm("EdityBookInfo", new { }, new AjaxOptions { HttpMethod = "post", OnBegin = "AjaxBegin", OnSuccess = "afterSuccess" }, new { @class = "layui-form" }))
+    {
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品标题：</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="Bid" value="@Model.Bid"/>
+                <input type="text" name="title" lay-verify="title" value="@Model.Title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品标语：</label>
+            <div class="layui-input-block">
+                <input type="text" name="TitleHot" lay-verify="title" value="@Model.TitleHot" autocomplete="off" placeholder="请输入商品标语" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">原价：</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="PriceOld" placeholder="￥" value="@Model.PriceOld" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">现价：</div>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="PriceNew" placeholder="￥" value="@Model.PriceNew" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">作者：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Author" lay-verify="title" value="@Model.Author" autocomplete="off" placeholder="请输入作者" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">出版社：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Publisher" lay-verify="title" value="@Model.Publisher" autocomplete="off" placeholder="请输入出版社" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">出版日期</label>
+                <div class="layui-input-block">
+                    <input type="text" name="PublishDate" id="date1" value="@Model.PublishDate" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">出售日期</label>
+                <div class="layui-input-block">
+                    <input type="text" name="OnSaleDate" id="date2" value="@Model.OnSaleDate" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">ISBN：</label>
+            <div class="layui-input-block">
+                <input type="text" name="Isbn" lay-verify="title" value="@Model.ISBN" autocomplete="off" placeholder="请输入ISBN" class="layui-input">
+            </div>
+        </div>
+         <div class="layui-form-item">
+            <label class="layui-form-label">书籍类别：</label>
+            <div class="layui-input-block">
+                <input type="hidden" name="TypeId" value="@Model.TypeId"/>
+                <input type="text" name="typenames" lay-verify="title" value="@ViewData["TypeNames"]" autocomplete="off" placeholder="无商品类别，请您输入" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">修改类别：</label>
+            <div class="layui-input-inline">
+
+                @Html.DropDownList("quiz1", ViewData["One"] as SelectList, "请选择一级类别", new { @lay_filter = "test", @id = "one" })
+            </div>
+            <div class="layui-input-inline">
+                <div class="layui-form" lay-filter="test2" id="test2">
+                 @*   @{Html.RenderAction("AddSelectTwo", "BookInfo");}*@
+                </div>
+            </div>
+            <div class="layui-input-inline">
+                <div class="layui-form" lay-filter="test3" id="test3">
+                 @*   @{Html.RenderAction("AddSelectThree", "BookInfo");}*@
+                </div>
+            </div>
+        </div>
+   
+        <div class="layui-upload" style="text-align: center">
+            <button type="button" class="layui-btn" id="test1">上传图片</button>
+            <div class="layui-upload-list">
+                <img class="layui-upload-img" id="demo1" src="@Model.ImgTitle"/>
+                <p id="demoText"></p>
+                <input type="hidden" name="imgurl" value="@Model.ImgTitle" id="imgurl" />
+            </div>
+        </div>
+      
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">编辑器</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" name="Details" lay-verify="content" id="LAY_demo_editor">@Model.Details</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="demo1">修改</button>
+                <button type="reset" class="layui-btn layui-btn-primary" onclick="Back()">返回</button>
+            </div>
+        </div>
+    }
+
+    <script src="~/content/layui/layui.js"></script>
+    <script>
+        layui.use([ 'form', 'layedit', 'laydate', 'upload'], function () {
+            var $ = layui.jquery
+            var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+          , url: '/ashx/BookImageUpLoad.ashx'
+          , before: function (obj) {
+              //预读本地文件示例，不支持ie8
+              obj.preview(function (index, file, result) {
+                  //$('#demo1').attr('src', result); //图片链接（base64）
+              });
+          }
+          , done: function (res) {
+              //如果上传失败
+              if (res.code > 0) {
+                  $('#demo1').attr('src', result); //图片链接（base64）
+                  return layer.msg('上传失败');
+              }
+              //上传成功
+              $('#demo1').attr('src', res.d); //图片链接（base64）
+              $("#imgurl").val(res.d);
+          }
+          , error: function () {
+              //演示失败状态，并实现重传
+              var demoText = $('#demoText');
+              demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+              demoText.find('.demo-reload').on('click', function () {
+                  uploadInst.upload();
+              });
+          }
+        });
+
+
+        //日期
+        laydate.render({
+            elem: '#date1'
+        });
+        laydate.render({
+            elem: '#date2'
+        });
+
+        //创建一个编辑器
+        var editIndex = layedit.build('LAY_demo_editor');
+
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 1) {
+                    return '至少得输入2个字符以上哦';
+                }
+            }
+          , content: function (value) {
+              layedit.sync(editIndex);
+          }
+        });
+
+        //下拉框的检测监视  和下拉框的渲染
+        function SelectRender(testJC, testXR, urlaction) {
+            form.on("select(" + testJC + ")", function (data) {
+                $.ajax({
+                    url: urlaction,
+                    data: {
+                        typeid: data.value
+                    },
+                    type: "post",
+                    success: function (data) {
+                        $("#" + testXR).html(data)
+                        form.render('select', testXR)            //重新渲染  表单中的  select中的信息
+                    }
+                })
+            });
+        }
+
+
+
+        //在表单中监听  我们select 选项   如果我们选择了下拉框中的内容就会执行下面的方法了
+        SelectRender("test", "test2", "@Url.Action("AddSelectTwo", "BookInfo")");
+
+    @* form.on('select(test)', function (data) {
+            $.ajax({
+                url: "@Url.Action("AddSelectTwo","BookInfo")",
+                    data: {
+                        typeid: data.value
+                    },
+                    type: "post",
+                    success: function (data) {
+                        $("#test2").html(data)
+                        form.render('select', 'test2')            //重新渲染  表单中的  select中的信息
+                    }
+            })
+        });*@
+
+
+        //这里我们监听下拉框  test2 的下拉框 
+        SelectRender("test2", "test3", "@Url.Action("AddSelectThree","BookInfo")");
+        @*  form.on('select(test2)', function (data) {
+            $.ajax({
+                url: "@Url.Action("AddSelectThree","BookInfo")",
+                    data: {
+                        typeid: data.value
+                    },
+                    type: "post",
+                    success: function (data) {
+                        $("#test3").html(data);
+                        form.render('select', 'test3')
+                    }
+                })
+            })*@
+
+    });
+</script>
+
+</body>
+</html>

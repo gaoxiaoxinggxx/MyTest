@@ -1,0 +1,76 @@
+﻿@model Model.BookInfo
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>信息页面展示</title>
+    
+    <link href="~/content/BookInfoDeailsShow/css/pintuer.css" rel="stylesheet" />
+    <link href="~/content/BookInfoDeailsShow/css/admin.css" rel="stylesheet" />
+   
+    <script src="~/content/BookInfoDeailsShow/Loginjs/jquery.js"></script>
+    <script src="~/content/BookInfoDeailsShow/Loginjs/pintuer.js"></script>
+    <script src="~/content/BookInfoDeailsShow/Loginjs/respond.js"></script>
+    <script src="~/content/BookInfoDeailsShow/Loginjs/admin.js"></script>
+    <link type="image/x-icon" href="http://www.pintuer.com/favicon.ico" rel="shortcut icon" />
+    <link href="http://www.pintuer.com/favicon.ico" rel="bookmark icon" />    <script type="text/javascript">
+        function Back() {
+            window.location.href = "@Url.Action("EditDeleteBookInfo","BookInfo")";
+        }
+    </script>
+</head>
+<body>
+   <div class="admin" style="margin-left:0px">
+	<div class="line-big">
+    	<div class="xm3">
+        	<div class="panel border-back">
+            	<div class="panel-body text-center">
+                   
+                	<img src="@Model.ImgTitle" width="120" class="radius-circle" /><br />
+                    
+                </div>
+                <div class="panel-foot bg-back border-back" style="text-align:center"><a target="_blank" class="button bg-dot icon-code" href="#"> 封面展示</a> </div>
+            </div>
+            <br />
+        	<div class="panel">
+            	<div class="panel-head"><strong>信息统计</strong></div>
+                <ul class="list-group">
+                	<li><span class="float-right badge bg-red">88</span><span class="icon-user"></span> 售出</li>
+                    <li><span class="float-right badge bg-main">828</span><span class="icon-file"></span> 库存</li>
+                    <li><span class="float-right badge bg-main">828</span><span class="icon-shopping-cart"></span> 订单</li>
+                </ul>
+            </div>
+            <br />
+        </div>
+        <div class="xm9">
+            <div class="alert alert-yellow"><span class="close"></span><strong>注意：</strong>您有5条未读评论信息信息，<a href="#">点击查看</a>。</div>
+            <div class="panel">
+                <table class="table">
+                	<tr><th colspan="2">商品信息</th><th colspan="2"></th></tr>
+                    <tr><td width="110" align="right">名称:</td><td>@Model.Title</td><td width="90" align="right">出版日期：</td><td>@Model.PublishDate</td></tr>
+                    <tr><td align="right">作者：</td><td>@Model.Author</td><td align="right">原价：</td><td>@Model.PriceOld</td></tr>
+                    <tr><td align="right">出版社：</td><td>@Model.Publisher</td><td align="right">现价：</td><td>@Model.PriceNew</td></tr>
+                    <tr><td align="right">ISBN：</td><td>@Model.ISBN</td><td align="right">群交流：</td><td>1111111111</td></tr>
+                </table>
+            </div>
+          
+            <div class="alert">
+                <h4>热标题</h4>
+                <p class="text-gray padding-top">@Model.Details</p>
+            	@*<a target="_blank" class="button bg-dot icon-code" href="pintuer2.zip"> 下载示例代码</a> 
+            	<a target="_blank" class="button bg-main icon-download" href="http://www.pintuer.com/pintuer.zip"> 下载拼图框架</a> 
+            	<a target="_blank" class="button border-main icon-file" href="http://www.pintuer.com/"> 拼图使用教程</a>*@
+                <button class="button bg-sub radius-rounded" onclick="Back()">退出展示页面</button>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>
+
+</body>
+</html>

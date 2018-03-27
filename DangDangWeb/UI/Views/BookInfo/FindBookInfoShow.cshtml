@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "FindBookInfoShow";
+    Layout = "~/Views/Shared/_layuiShared.cshtml";
+}
+<blockquote class="layui-elem-quote layui-text">
+    温馨提醒两个常见“问题”：1. <a href="#" target="_blank">名称，作者，出版社是模糊查询</a> 2. <a href="#" target="_blank">价格，出版日期都是范围查询</a>
+</blockquote>
+@using (Ajax.BeginForm("FindBookInfoButton", new { }, new AjaxOptions { HttpMethod = "post", OnSuccess = "afterSuccess" }, new { @class = "layui-form layui-form-pane" }))
+{
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">作者：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="author" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">出版社：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="publisher" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">类别选择：</label>
+        <div class="layui-input-inline">
+              @Html.DropDownList("quiz1", ViewData["One"] as SelectList, "请选择一级分类", new { @lay_filter = "test", @id = "one" })
+        </div>
+        <div class="layui-input-inline">
+           <div class="layui-form" lay-filter="test2" id="test2">
+                 @{Html.RenderAction("AddSelectTwo", "BookInfo");}
+          </div>
+        </div>
+
+        <div class="layui-input-inline">
+            <div class="layui-form" lay-filter="test3" id="test3">
+                   @{Html.RenderAction("AddSelectThree", "BookInfo");}     
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">价格范围</label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="price_min" placeholder="￥" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid">-</div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="text" name="price_max" placeholder="￥" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+
+     <div class="layui-form-item">
+        <div class="layui-inline">
+            <label class="layui-form-label">出版范围</label>
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="date1" id="date1" placeholder="" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid">-</div>
+            <div class="layui-input-inline" style="width: 200px;">
+                <input type="text" name="date2" id="date2" placeholder="" autocomplete="off" class="layui-input">
+            </div>
+             <button class="layui-btn" lay-submit="" lay-filter="demo2">搜索查询</button>
+               <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+}
+
+   <div id="tableshow">
+       @{Html.RenderAction("FindBookInfo", "BookInfo");}
+   </div>
+  
+@section script
+  {
+    <script>
+        function afterSuccess(data) {
+            $("#tableshow").html(data);
+        }
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+            //日期
+            laydate.render({
+                elem: '#date1'
+            });
+            laydate.render({
+                elem: '#date2'
+            });
+           
+
+            //下拉框的检测监视  和下拉框的渲染
+            function SelectRender(testJC, testXR, urlaction) {
+                form.on("select(" + testJC + ")", function (data) {
+                    $.ajax({
+                        url: urlaction,
+                        data: {
+                            typeid: data.value
+                        },
+                        type: "post",
+                        success: function (data) {
+                            $("#" + testXR).html(data)
+                            form.render('select', testXR)            //重新渲染  表单中的  select中的信息
+                        }
+                    })
+                });
+            }
+
+
+
+            //在表单中监听  我们select 选项   如果我们选择了下拉框中的内容就会执行下面的方法了
+            SelectRender("test", "test2", "@Url.Action("AddSelectTwo", "BookInfo")");
+
+    @* form.on('select(test)', function (data) {
+            $.ajax({
+                url: "@Url.Action("AddSelectTwo","BookInfo")",
+                    data: {
+                        typeid: data.value
+                    },
+                    type: "post",
+                    success: function (data) {
+                        $("#test2").html(data)
+                        form.render('select', 'test2')            //重新渲染  表单中的  select中的信息
+                    }
+            })
+        });*@
+
+
+            //这里我们监听下拉框  test2 的下拉框 
+            SelectRender("test2", "test3", "@Url.Action("AddSelectThree","BookInfo")");
+      @*  form.on('select(test2)', function (data) {
+            $.ajax({
+                url: "@Url.Action("AddSelectThree","BookInfo")",
+                    data: {
+                        typeid: data.value
+                    },
+                    type: "post",
+                    success: function (data) {
+                        $("#test3").html(data);
+                        form.render('select', 'test3')
+                    }
+                })
+            })*@
+
+        });
+    </script>
+}

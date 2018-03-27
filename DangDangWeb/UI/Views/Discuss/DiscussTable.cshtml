@@ -1,0 +1,64 @@
+﻿@model IList<Model.Discuss>
+
+
+<div class="layui-form">
+     
+  <table class="layui-table">
+    <thead>
+      <tr>
+        <th>编号</th>
+        <th>书名</th>
+        <th>评论人</th>
+        <th>禁用词</th>
+        <th>警告词</th>
+        <th>评论时间</th>
+        <th>是否删除</th>
+          <th>操作</th>
+      </tr> 
+    </thead>
+    <tbody>
+     @foreach (var item in Model)
+     {
+        <tr>
+        <td>@item.Did</td>
+        <td>@item.BookInfo.Title</td>
+        <td>@item.DisName</td>
+        <td> @item.JycCount</td>
+        <td> @item.JgcCount</td>
+        <td> @item.Date</td>
+         
+
+          @{if (@item.Float == 0)
+            { 
+             <td>
+                 
+                   <div class="layui-input-block">
+                   <input type="checkbox"  name="open" lay-skin="switch" lay-filter="switchTest" title="@item.Did" lay-text="是|否">
+                    </div>
+                      
+             </td> 
+            }
+            else
+            {
+                <td>
+                     
+                      <div class="layui-input-block">
+                <input type="checkbox" checked=""   name="open" lay-skin="switch" lay-filter="switchTest" title="@item.Did" lay-text="是|否">
+                          </div>
+                          
+                </td>
+            
+            }
+     }
+          
+         
+      
+        <td><button class="layui-btn layui-btn-xs layui-btn-normal">查看详细</button></td>
+      </tr>
+     }
+    </tbody>
+  </table>
+         
+</div>
+   
+   

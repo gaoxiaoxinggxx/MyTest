@@ -1,0 +1,48 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>审核表单</title>
+    <link href="~/content/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/js/jquery-1.7.1.min.js"></script>
+    <script src="~/js/jquery.unobtrusive-ajax.min.js"></script>
+</head>
+<body>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>审核表单</legend>
+    </fieldset>
+
+   <div id="div">
+       @{Html.RenderAction("AuditingTable", "Inventor");}
+   </div>
+
+    <div id="demo2-1"></div>
+    <script src="~/content/layui/layui.js"></script>
+    <script>
+        layui.use(['laypage', 'layer'], function () {
+            var laypage = layui.laypage
+            , layer = layui.layer;
+
+          
+            laypage.render({
+                elem: 'demo2-1'
+              , count: parseInt(@ViewData["PageCount"])*10
+              , theme: '#FF5722'
+               , jump: function (obj, first) {
+                   if (!first) {
+
+                   }
+               }
+            });
+           
+
+        });
+</script>
+
+</body>
+</html>
